@@ -1,0 +1,80 @@
+diff --git a/Makefile b/Makefile
+index 67c8164..f5481dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -113,13 +113,13 @@ MKDIR=mkdir -p
+ 
+ # PREFIX = /usr/local/gcc/6.2.0/bin/
+ # PREFIX = /usr/local/gcc-8.1/bin/
+-PREFIX =
++PREFIX = /opt/homebrew/Cellar/gcc/15.2.0/bin/
+ SHELL       = /bin/sh
+ #ARCH        = LINUX
+ 
+-CC          = $(PREFIX)gcc
++CC          = $(PREFIX)gcc-15
+ CLINKER     = $(CC)
+-CXX         = $(PREFIX)g++
++CXX         = $(PREFIX)g++-15
+ CCLINKER    = $(CXX)
+ 
+ #CC          = $(PREFIX)gcc-8.1
+diff --git a/src/gfanlib_circuittableint.h b/src/gfanlib_circuittableint.h
+index 2b5ced4..021c392 100644
+--- a/src/gfanlib_circuittableint.h
++++ b/src/gfanlib_circuittableint.h
+@@ -25,6 +25,7 @@ namespace gfan{
+   template<typename> struct MyMakeUnsigned;
+   template <> struct MyMakeUnsigned<int>{typedef unsigned int type;};
+   template <> struct MyMakeUnsigned<long int>{typedef unsigned long int type;};
++  template <> struct MyMakeUnsigned<long long int>{typedef unsigned long int type;};
+   template <> struct MyMakeUnsigned<__int128>{typedef unsigned __int128 type;};
+ 
+   class MVMachineIntegerOverflow: public std::exception
+@@ -57,6 +58,13 @@ static std::string toStr(__int128_t b)
+ 	return s.str();
+ }
+ 
++static std::string toStr(long int b)
++{
++	std::stringstream s;
++	s<<"["<<std::setfill('0')<<std::setw(16)<<std::hex<<(unsigned long int)(b>>64)<<":"<<std::setfill('0')<<std::setw(16)<<std::hex<<(unsigned long int)b<<"]";
++	return s.str();
++}
++
+ static std::string toStr(__uint128_t b)
+ {
+ 	std::stringstream s;
+@@ -214,6 +222,11 @@ static __int128_t extMul(long int a, long int b)
+ 	return ((__int128_t)a)*((__int128_t)b);
+ }
+ 
++static long long extMul(long long a, long long b)
++{
++	return ((long long)a)*((long long)b);
++}
++
+ static __uint128_t unsignedProd64(uint64_t x,uint64_t y)
+ {
+ 	return __uint128_t(x)*__uint128_t(y);
+@@ -531,7 +544,7 @@ public:
+ 		  else
+ 		  {
+ 			  if(0){
+-				  std::cerr<<toStr(positiveResultBoundTimesD)<<"\n"<<toStr(denominatorDivisor.v)<<"\n";
++				  //std::cerr<<toStr(positiveResultBoundTimesD)<<"\n"<<toStr(denominatorDivisor.v)<<"\n";
+ 				  std::cerr<<"---\n";
+ 				  std::cerr<<toStr(negabs(t).v)<<"\n";
+ 				  std::cerr<<toStr(boundA.v)<<"\n";
+diff --git a/src/gfanlib_z.h b/src/gfanlib_z.h
+index f56597c..86a8dd6 100644
+--- a/src/gfanlib_z.h
++++ b/src/gfanlib_z.h
+@@ -14,6 +14,7 @@
+ #define OLD 1
+ #if OLD
+ #include "gmp.h"
++#include <cstdint>
+ 
+ namespace gfan{
+ 
