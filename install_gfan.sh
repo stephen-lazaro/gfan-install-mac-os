@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefai
+set -euo pipefail
 
 echo "Installing gmp with Homebrew"
 # Install pre-requesites
@@ -30,7 +30,7 @@ echo "Tweaking gfan for Mac OS"
 git init
 git add .
 git commit -m "Initial"
-git apply make_macable.patch
+git apply $ROOT_PATH/make_macable.patch
 
 echo "Building gfan"
 make cddpath=$ROOT_PATH/gfan0.7/cddlib gmppath=/opt/Homebrew/Cellar/gmp/6.3.0/ cddnoprefix=true
