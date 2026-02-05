@@ -5,7 +5,7 @@ Should automate downloading dependencies and running the various build steps, as
 
 The only dependency is that you should have [Homebrew](https://brew.sh/) already (and you should be running this without Rosetta emulation)!
 
-The script assumes the latest versions of `gcc` and of `gmp` are 15 and 6.3.0 respectively.
+The script assumes the latest versions of `gcc` and of `gmp` are 15 and 6.3.0 respectively. If that's no longer true you may have to change those numbers where they appear in these files.
 
 ## Usage
 Move the script and patch to a folder you're happy building `gfan` in. It could just be literally the clone of this repo, that's fine. Up to you.
